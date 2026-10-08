@@ -16,37 +16,37 @@ function updateTW2026_DayChange() {
     var day = new Date().getDay();
     var j = 2;
     for (var i = 1; i <= totalCells; ++i, ++j) {
-	var c = daychange.getCell(i, 1);
-	var s = shares.getCell(i, 1).getValue();
-	Logger.log(s); 
-	if (s < 1 || s == "") { // 1 : one share
-	    c.setValue("");
-	    continue;
-	}
-	switch (day) {
-	case 0: // Sunday (Last price is on Friday, so compare Friday and Thursday{-3})
-	    c.setFormula('(D' + j + formulahead + j + forumlacenter + '3' + forumlatail + j);
-	    break;
+        var c = daychange.getCell(i, 1);
+        var s = shares.getCell(i, 1).getValue();
+        Logger.log(s); 
+        if (s < 1 || s == "") { // 1 : one share
+            c.setValue("");
+            continue;
+        }
+        switch (day) {
+        case 0: // Sunday (Last price is on Friday, so compare Friday and Thursday{-3})
+            c.setFormula('(D' + j + formulahead + j + forumlacenter + '3' + forumlatail + j);
+            break;
 
-	case 1: // Monday (Compare Monday and Friday{-3})
-	    c.setFormula('(D' + j + formulahead + j + forumlacenter + '3' + forumlatail + j);
-	    break;
+        case 1: // Monday (Compare Monday and Friday{-3})
+            c.setFormula('(D' + j + formulahead + j + forumlacenter + '3' + forumlatail + j);
+            break;
 
-	default: // Tuesday ~ Satursday
-	    c.setFormula('(D' + j + formulahead + j + forumlacenter + '1' + forumlatail + j);
-	    break;
-	}
+        default: // Tuesday ~ Satursday
+            c.setFormula('(D' + j + formulahead + j + forumlacenter + '1' + forumlatail + j);
+            break;
+        }
     }
 }
 
 /*
-  0	日 - 3
-  1	一 - 3
-  2	二 - 1
-  3	三 - 1
-  4	四 - 1
-  5	五 - 1
-  6	六 - 1
+  0     日 - 3
+  1     一 - 3
+  2     二 - 1
+  3     三 - 1
+  4     四 - 1
+  5     五 - 1
+  6     六 - 1
 
   if (Top9sheet) {
   var tickets = Top9sheet.getRange('C2:C');

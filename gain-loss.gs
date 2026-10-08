@@ -2,11 +2,97 @@
  *
  */
 
+const YEAR_LABEL = "2026";
 var GainLoss2026_sht;
 var GainLoss2026_Summary_sht;
 var TickerSheets = [];
 const Data_source_sheet = 'Gain-Loss.US.2026.Log';
 const Data_output_sheet = 'Gain-Loss.US.2026';
+var Tickers = [
+    "DRAM",
+    "MU",
+    "ADBE",
+    "ADI",
+    "AMD",
+    "ASTS",
+    "BRKB",
+    "CBRS",
+    "CLS",
+    "COHR",
+    "CRWD",
+    "IBM",
+    "LITE",
+    "MRVL",
+    "MSFT",
+    "NBIS",
+    "NKE",
+    "NLR",
+    "ON",
+    "ORCL",
+    "PLTR",
+    "QQQM",
+    "SKHY",
+    "SMCI",
+    "SNDK",
+    "SPCX",
+    "T",
+    "TMUS",
+    "TSLA",
+    "TXN",
+    "VOX",
+    "QLD",
+    "VGT",
+    "XLK",
+    "MSTR",
+    "IBIT",
+    "IEI"
+];
+
+var Tickers_in_eq = [
+    "BATS:DRAM",
+    "MU",
+    "ADBE",
+    "ADI",
+    "AMD",
+    "ASTS",
+    "BRK.B",
+    "CBRS",
+    "CLS",
+    "COHR",
+    "CRWD",
+    "IBM",
+    "LITE",
+    "MRVL",
+    "MSFT",
+    "NBIS",
+    "NKE",
+    "NLR",
+    "ON",
+    "ORCL",
+    "PLTR",
+    "QQQM",
+    "SKHY",
+    "SMCI",
+    "SNDK",
+    "SPCX",
+    "T",
+    "TMUS",
+    "TSLA",
+    "TXN",
+    "VOX",	
+    "QLD",
+    "VGT",
+    "XLK",
+    "MSTR",
+    "IBIT",
+    "IEI"
+];
+
+var Options = [
+    "CALL MSFT",
+    "CALL QLD",
+    "CALL MU"
+];
 
 function calculate_gainloss() {
     var spreadsheet = SpreadsheetApp.getActive();
@@ -22,89 +108,14 @@ function calculate_gainloss() {
 	return;
     }
 
-    var tickers = [
-	"DRAM",
-	"MU",
-	"ADBE",
-	"ADI",
-	"AMD",
-	"ASTS",
-	"BRKB",
-	"CBRS",
-	"CLS",
-	"COHR",
-	"CRWD",
-	"IBM",
-	"LITE",
-	"MRVL",
-	"MSFT",
-	"NBIS",
-	"NKE",
-	"NLR",
-	"ON",
-	"ORCL",
-	"PLTR",
-	"QQQM",
-	"SKHY",
-	"SMCI",
-	"SNDK",
-	"SPCX",
-	"T",
-	"TMUS",
-	"TSLA",
-	"TXN",
-	"VOX",
-	"QLD",
-	"VGT",
-	"XLK",
-	"MSTR",
-	"IBIT",
-	"IEI"
-    ];
+    // for (var i = 0; i < Tickers.length; ++i) {
+    // 	create_ticker_sheet(Tickers[i]);
+    // 	create_ticker_data(Tickers[i], Tickers_in_eq[i], i); // Array index in Tickersheets
+    // }
 
-    var tickers_in_eq = [
-	"BATS:DRAM",
-	"MU",
-	"ADBE",
-	"ADI",
-	"AMD",
-	"ASTS",
-	"BRK.B",
-	"CBRS",
-	"CLS",
-	"COHR",
-	"CRWD",
-	"IBM",
-	"LITE",
-	"MRVL",
-	"MSFT",
-	"NBIS",
-	"NKE",
-	"NLR",
-	"ON",
-	"ORCL",
-	"PLTR",
-	"QQQM",
-	"SKHY",
-	"SMCI",
-	"SNDK",
-	"SPCX",
-	"T",
-	"TMUS",
-	"TSLA",
-	"TXN",
-	"VOX",	
-	"QLD",
-	"VGT",
-	"XLK",
-	"MSTR",
-	"IBIT",
-	"IEI"
-    ];
-
-    for (var i = 0; i < tickers.length; ++i) {
-	create_ticker_sheet(tickers[i]);
-	create_ticker_data(tickers[i], tickers_in_eq[i], i); // Array index in TickerSheets
+    for (var i = 0; i < Options.length; ++i) {
+	create_option_sheet(Options[i]);
+	create_option_data(Options[i], i); // Array index in OptionSheets
     }
 }
 
@@ -124,7 +135,7 @@ function create_summary_sheet(name) {
 }
 
 function create_ticker_sheet(name) {
-    var sheetname = name + '.2026';
+    var sheetname = name + '.' + YEAR_LABEL;
     var spreadsheet = SpreadsheetApp.getActive();
     var sht = spreadsheet.getSheetByName(sheetname);
 
@@ -268,4 +279,50 @@ function create_ticker_data(ticker, ticker_eq, sht_id) {
 
 function message_box(msg) {
     SpreadsheetApp.getUi().alert(msg);
+}
+
+function create_option_sheet(name) {
+    var sheetname = name + '.' + YEAR_LABEL;
+    var spreadsheet = SpreadsheetApp.getActive();
+    var sht = spreadsheet.getSheetByName(sheetname);
+
+    if (sht) {
+	sht.clear();
+    }
+    else {
+	sht = spreadsheet.insertSheet(sheetname, spreadsheet.getNumSheets());
+    }
+    OptionSheets.push(sht);
+}
+
+function collet_option_entries(ticker) {
+    var rowNumber = GainLoss2026_sht.getMaxRows();
+    var range = GainLoss2026_sht.getRange("A1:M" + rowNumber);
+    SpreadsheetApp.getActive().setNamedRange("Symbol", range);
+    var values = range.getValues();
+
+    var share = 0, addup = 0, realized = 0, unitcost = 0, sum_realized = 0, sum_buy = 0;
+    var data = [];
+    data.push(["Date", "Action", "Price", "Unit cost", "Quantity", "Total cost", "Sum of share", "Sum of cost", "Realized", "Sum of Realized"]);
+    var regex = new RegExp('^' + ticker + '.');
+
+    values.forEach(function (row) {
+	var sym = row[0];
+	if (sym == "") {
+	    var qty = row[1];
+	    var price = row[2];
+	    var action = row[3];
+	    var descrip = row[4];
+	    var date = row[5];
+	    var money = row[8];
+	    if (regex.test(descrip)) {
+		data.push([date, action, price, unitcost, qty, money, share, addup, realized, sum_realized]);
+	    }
+	}
+    });
+
+    // Logger.log(ticker + " Realized: " + sum_realized);
+    data.push(["", "Ticker", "Price", "Unit cost", "", "Total Cost", "Sum of Share", "Sum of Realized", "Market Value", "Un-realized ($)", "Un-realized (%)", "Cumulative cost", "Spent cost", "Realized gain (%)"]);
+
+    return data;
 }

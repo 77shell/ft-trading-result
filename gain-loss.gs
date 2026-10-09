@@ -117,7 +117,7 @@ function calculate_stock_gainloss() {
     }
 
     for (var i = 0; i < Tickers.length; ++i) {
-        if (message_box("Query", "Process" + Tickers[i] + " data?")) {
+        if (message_box("Query", "Process " + Tickers[i] + " data?")) {
             create_ticker_sheet(Tickers[i]);
             create_ticker_data(Tickers[i], Tickers_in_eq[i], i); // Array index in Tickersheets
         }
@@ -139,14 +139,14 @@ function calculate_option_gainloss() {
 
     var j = 0;
     for (var i = 0; i < CALL_Options.length; ++i) {
-	if (message_box("Query", "Process" + CALL_Options[i] + " data?")) {
+	if (message_box("Query", "Process " + CALL_Options[i] + " CALL data?")) {
             create_option_sheet(CALL_Options[i], "CALL");
             create_option_data(CALL_Options[i], "CALL", j++); // j: Array index in OptionSheets
 	}
     }
     Logger.log("Start put options");
     for (var i = 0; i < PUT_Options.length; ++i) {
-	if (message_box("Query", "Process" + PUT_Options[i] + " data?")) {
+	if (message_box("Query", "Process " + PUT_Options[i] + " PUT data?")) {
             create_option_sheet(PUT_Options[i], "PUT");
             create_option_data(PUT_Options[i], "PUT", j++); // j: Array index in OptionSheets
 	}
@@ -156,16 +156,20 @@ function calculate_option_gainloss() {
 function create_summary_sheet(name) {
     var spreadsheet = SpreadsheetApp.getActive();
     var sht = spreadsheet.getSheetByName(Data_output_sheet);
+    const title = ["", "Ticker", "Price", "Unit cost", "", "Total Cost", "Sum of Share", "Sum of Realized", "Market Value", "Un-realized ($)", "Un-realized (%)", "Cumulative cost", "Spent cost", "Realized gain (%)"];
 
     if (sht) {
-        sht.clear();
+      if (message_box("Query", "Clear " + Data_output_sheet + " content?")) {
+         sht.clear();
+         sht.appendRow(title);
+      }
     }
     else {
         sht = spreadsheet.insertSheet(name, spreadsheet.getNumSheets());
         sht.getRange("C2:J").setNumberFormat("#,##0.00");
+        sht.appendRow(title);
     }
     GainLoss2026_Summary_sht = sht;
-    GainLoss2026_Summary_sht.appendRow(["", "Ticker", "Price", "Unit cost", "", "Total Cost", "Sum of Share", "Sum of Realized", "Market Value", "Un-realized ($)", "Un-realized (%)", "Cumulative cost", "Spent cost", "Realized gain (%)"]);
 }
 
 function create_ticker_sheet(name) {
@@ -313,7 +317,7 @@ function create_ticker_data(ticker, ticker_eq, sht_id) {
 
 function message_box(title, msg) {
     const ui = SpreadsheetApp.getUi();
-    ui.alert(title,
+    const response = ui.alert(title,
              msg,
              ui.ButtonSet.YES_NO);
     if (response == ui.Button.YES) {

@@ -112,13 +112,15 @@ function calculate_stock_gainloss() {
         create_summary_sheet(Data_output_sheet);
     }
     else {
-        message_box("No '" + sheetname + "' alive");
+        message_box("Warning", "No '" + sheetname + "' alive");
         return;
     }
 
     for (var i = 0; i < Tickers.length; ++i) {
-      create_ticker_sheet(Tickers[i]);
-      create_ticker_data(Tickers[i], Tickers_in_eq[i], i); // Array index in Tickersheets
+        if (message_box("Query", "Process" + Tickers[i] + " data?")) {
+            create_ticker_sheet(Tickers[i]);
+            create_ticker_data(Tickers[i], Tickers_in_eq[i], i); // Array index in Tickersheets
+        }
     }
 }
 
@@ -131,19 +133,23 @@ function calculate_option_gainloss() {
         create_summary_sheet(Data_output_sheet);
     }
     else {
-        message_box("No '" + sheetname + "' alive");
+        message_box("Warning", "No '" + sheetname + "' alive");
         return;
     }
 
     var j = 0;
     for (var i = 0; i < CALL_Options.length; ++i) {
-        create_option_sheet(CALL_Options[i], "CALL");
-        create_option_data(CALL_Options[i], "CALL", j++); // j: Array index in OptionSheets
+	if (message_box("Query", "Process" + CALL_Options[i] + " data?")) {
+            create_option_sheet(CALL_Options[i], "CALL");
+            create_option_data(CALL_Options[i], "CALL", j++); // j: Array index in OptionSheets
+	}
     }
     Logger.log("Start put options");
     for (var i = 0; i < PUT_Options.length; ++i) {
-        create_option_sheet(PUT_Options[i], "PUT");
-        create_option_data(PUT_Options[i], "PUT", j++); // j: Array index in OptionSheets
+	if (message_box("Query", "Process" + PUT_Options[i] + " data?")) {
+            create_option_sheet(PUT_Options[i], "PUT");
+            create_option_data(PUT_Options[i], "PUT", j++); // j: Array index in OptionSheets
+	}
     }
 }
 
@@ -305,8 +311,20 @@ function create_ticker_data(ticker, ticker_eq, sht_id) {
     GainLoss2026_Summary_sht.appendRow(entries[entries.length - 1]);
 }
 
-function message_box(msg) {
-    SpreadsheetApp.getUi().alert(msg);
+function message_box(title, msg) {
+    const ui = SpreadsheetApp.getUi();
+    ui.alert(title,
+             msg,
+             ui.ButtonSet.YES_NO);
+    if (response == ui.Button.YES) {
+        return 1;
+    }
+    else if (response == ui.Button.NO) {
+        return 0;
+    }
+    else {
+        return -1;
+    }   
 }
 
 function create_option_sheet(name, side) {
@@ -357,7 +375,7 @@ function collect_option_entries(ticker, side) {
 
     // Logger.log(ticker + " Realized: " + sum_realized);
     data.push(["", "Side", "Price", "Unit cost", "", "Total Cost", "Sum of Share", "Sum of Realized", "Market Value", "Un-realized ($)", "Un-realized (%)", "Cumulative cost", "Spent cost", "Realized gain (%)", "Description"]);
-    data.push(["", ticker, "", unitcost, "", addup, share, sum_realized, "", "", "", sum_buy, "", ""]);
+    data.push(["", ticker + ' ' + side, "", unitcost, "", addup, share, sum_realized, "", "", "", sum_buy, "", ""]);
     return data;
 }
 

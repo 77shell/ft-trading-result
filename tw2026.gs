@@ -18,7 +18,7 @@ function updateTW2026_DayChange() {
     for (var i = 1; i <= totalCells; ++i, ++j) {
         var c = daychange.getCell(i, 1);
         var s = shares.getCell(i, 1).getValue();
-        Logger.log(s); 
+        Logger.log(s);
         if (s < 1 || s == "") { // 1 : one share
             c.setValue("");
             continue;

@@ -123,7 +123,7 @@ function get_top9_prices(startdate) {
             var w = top9weighs.getCell(i * 2 + 1, 1);
             w.setValue(100 / Top9_Weigh_Sum * weighs.getCell(i, 1).getValue());
             w.setNumberFormat("0.00");
-            
+
             var title = titles.getCell(i * 2 + 1, 1);
             title.setValue(t);
             title.setFontWeight('bold');
@@ -178,7 +178,7 @@ function calculate_top9_share() {
     var difference = Top9sheet.getRange('S4:S25');
     var diffincash = Top9sheet.getRange('T4:T25');
 
-    var sheet = SpreadsheetApp.getActive(); 
+    var sheet = SpreadsheetApp.getActive();
     var capital = sheet.getRange('myqqq-2021-10-11!M2').getValue();
     var cash = sheet.getRange('myqqq-2021-10-11!M7').getValue();
     var exclude = sheet.getRange('myqqq-2021-10-11!M9').getValue();
@@ -198,7 +198,7 @@ function calculate_top9_share() {
         var b = bougshares.getCell(r, 1);
         var d = difference.getCell(r, 1);
         var d2 = diffincash.getCell(r,1);
-        
+
         var cost = capital * w.getValue() / 100;
         //c.setValue(cost);
         var formula = '=P2*' + w.getA1Notation() + '/100';
@@ -340,7 +340,7 @@ function calculate_irr() {
     else {
         IRR = spreadsheet.insertSheet(sheetname, spreadsheet.getNumSheets());
     }
-    
+
     var label_range = IRR.getRange('F1:J1');
     label_range.setFontWeight('bold');
     var labels = [
@@ -391,7 +391,7 @@ function calculate_irr() {
     for (var ctcell = ct_range.getCell(r,1); yy < year_nbr;
          r += 2, ++yy,
          ctcell = ct_range.getCell(r,1),
-         pricecell = price_range.getCell(r,1)) 
+         pricecell = price_range.getCell(r,1))
     {
         //var y0 = pricecell.getValue();
         //var y1 = price_range.getCell(r+2,1).getValue();
@@ -419,7 +419,7 @@ function calculate_irr_values(ticket, year_nbr, price_range)
         var current_price = price_range.getCell(r,1);
         var yylabel_cell = yylabel_range.getCell(r,c);
 
-        for (var irrcell = irr_range.getCell(r,c); yy <= year_nbr; 
+        for (var irrcell = irr_range.getCell(r,c); yy <= year_nbr;
              yy++, r += 2,
              irrcell = irr_range.getCell(r,c),
              yylabel_cell = yylabel_range.getCell(r,c)
@@ -449,7 +449,7 @@ function calculate_roi(ticket, year_nbr, price_range)
     var yylabel_range = IRR.getRange('I5:I60');
     var yylabel_cell = yylabel_range.getCell(r,1);
     var roi_cell = roi_range.getCell(r,1);
-    for (var irrcell = irr_range.getCell(r,1); yy <= year_nbr; 
+    for (var irrcell = irr_range.getCell(r,1); yy <= year_nbr;
          yy++, r += 2,
          irrcell = irr_range.getCell(r,1),
          yylabel_cell = yylabel_range.getCell(r,1),

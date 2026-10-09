@@ -80,7 +80,7 @@ var Tickers_in_eq = [
     "TMUS",
     "TSLA",
     "TXN",
-    "VOX",      
+    "VOX",
     "QLD",
     "VGT",
     "XLK",
@@ -343,15 +343,21 @@ function collect_option_entries(ticker, side) {
             var descrip = row[4];
             var date = row[5];
             var money = row[8];
+
             if (regex.test(descrip)) {
+		share += qty;
+		addup += money;
+		if (qty > 0) {
+		    sum_buy += money;
+		}
                 data.push([date, action, price, unitcost, qty, money, share, addup, realized, sum_realized, descrip]);
             }
         }
     });
 
     // Logger.log(ticker + " Realized: " + sum_realized);
-    data.push(["", "Ticker", "Price", "Unit cost", "", "Total Cost", "Sum of Share", "Sum of Realized", "Market Value", "Un-realized ($)", "Un-realized (%)", "Cumulative cost", "Spent cost", "Realized gain (%)", "Description"]);
-
+    data.push(["", "Side", "Price", "Unit cost", "", "Total Cost", "Sum of Share", "Sum of Realized", "Market Value", "Un-realized ($)", "Un-realized (%)", "Cumulative cost", "Spent cost", "Realized gain (%)", "Description"]);
+    data.push(["", ticker, "", unitcost, "", addup, share, sum_realized, "", "", "", sum_buy, "", ""]);
     return data;
 }
 

@@ -103,13 +103,12 @@ var PUT_Options = [
   "MU"
 ];
 
-function calculate_gainloss() {
+function calculate_stock_gainloss() {
     var spreadsheet = SpreadsheetApp.getActive();
     var gainlossSheet = spreadsheet.getSheetByName(Data_source_sheet);
 
     if (gainlossSheet) {
         GainLoss2026_sht = gainlossSheet;
-        // gainlossSheet.activate();
         create_summary_sheet(Data_output_sheet);
     }
     else {
@@ -117,10 +116,24 @@ function calculate_gainloss() {
         return;
     }
 
-    // for (var i = 0; i < Tickers.length; ++i) {
-    //  create_ticker_sheet(Tickers[i]);
-    //  create_ticker_data(Tickers[i], Tickers_in_eq[i], i); // Array index in Tickersheets
-    // }
+    for (var i = 0; i < Tickers.length; ++i) {
+      create_ticker_sheet(Tickers[i]);
+      create_ticker_data(Tickers[i], Tickers_in_eq[i], i); // Array index in Tickersheets
+    }
+}
+
+function calculate_option_gainloss() {
+    var spreadsheet = SpreadsheetApp.getActive();
+    var gainlossSheet = spreadsheet.getSheetByName(Data_source_sheet);
+
+    if (gainlossSheet) {
+        GainLoss2026_sht = gainlossSheet;
+        create_summary_sheet(Data_output_sheet);
+    }
+    else {
+        message_box("No '" + sheetname + "' alive");
+        return;
+    }
 
     var j = 0;
     for (var i = 0; i < CALL_Options.length; ++i) {

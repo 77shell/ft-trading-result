@@ -23,7 +23,8 @@ function onOpen() {
     spreadsheet.addMenu('IRR', menuItems_irr);
 
     var menuItems_2026 = [
-        { name: 'Calculate Gain/Loss', functionName: 'calculate_gainloss' }
+        { name: 'Summarize Stock Trading Gain/Loss', functionName: 'calculate_stock_gainloss' },
+        { name: 'Summarize Option Trading Gain/Loss', functionName: 'calculate_option_gainloss' }
     ];
     spreadsheet.addMenu('2026', menuItems_2026);
 

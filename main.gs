@@ -18,7 +18,7 @@ function onOpen() {
 
     // flush_QQQ_top9_sheet();
     // listSheets_();
-    updateTW2026_DayChange();
+    // updateTW2026_DayChange();
 }
 
 function listSheets_() {

@@ -10,18 +10,6 @@ var N = 8;
  */
 function onOpen() {
     var spreadsheet = SpreadsheetApp.getActive();
-    var menuItems_qqq = [
-        { name: 'Download latest QQQ portfilio', functionName: 'downloadLatestQQQ_' },
-        { name: 'Flush QQQ Top9', functionName: 'flush_QQQ_top9_sheet' }
-    ];
-    spreadsheet.addMenu('QQQ', menuItems_qqq);
-
-    var menuItems_irr = [
-        { name: 'Calculate IRR', functionName: 'calculate_irr' },
-        { name: 'Average IRR', functionName: 'average_irr'}
-    ];
-    spreadsheet.addMenu('IRR', menuItems_irr);
-
     var menuItems_2026 = [
         { name: 'Summarize Stock Trading Gain/Loss', functionName: 'calculate_stock_gainloss' },
         { name: 'Summarize Option Trading Gain/Loss', functionName: 'calculate_option_gainloss' }

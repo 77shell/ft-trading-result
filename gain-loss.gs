@@ -3,8 +3,9 @@
  */
 
 const YEAR_LABEL = "2026";
-var GainLoss2026_sht;
-var GainLoss2026_Summary_sht;
+var GainLoss_Log_Sht;
+var STOCK_GainLoss_Sht;
+var OPTION_GainLoss_Sht;
 var TickerSheets = [];
 var OptionSheets = [];
 const Data_source_sheet = 'Gain-Loss.US.2026.Log';
@@ -108,8 +109,8 @@ function calculate_stock_gainloss() {
     var gainlossSheet = spreadsheet.getSheetByName(Data_source_sheet);
 
     if (gainlossSheet) {
-        GainLoss2026_sht = gainlossSheet;
-        create_summary_sheet(Data_output_sheet);
+        GainLoss_Log_Sht = gainlossSheet;
+        STOCK_GainLoss_Sht = create_output_sheet("STOCK_" + Data_output_sheet);
     }
     else {
         message_box("Warning", "No '" + sheetname + "' alive");
@@ -129,8 +130,8 @@ function calculate_option_gainloss() {
     var gainlossSheet = spreadsheet.getSheetByName(Data_source_sheet);
 
     if (gainlossSheet) {
-        GainLoss2026_sht = gainlossSheet;
-        create_summary_sheet(Data_output_sheet);
+        GainLoss_Log_Sht = gainlossSheet;
+        OPTION_GainLoss_Sht = create_output_sheet("OPTION_" + Data_output_sheet);
     }
     else {
         message_box("Warning", "No '" + sheetname + "' alive");
@@ -153,9 +154,9 @@ function calculate_option_gainloss() {
     }
 }
 
-function create_summary_sheet(name) {
+function create_output_sheet(name) {
     var spreadsheet = SpreadsheetApp.getActive();
-    var sht = spreadsheet.getSheetByName(Data_output_sheet);
+    var sht = spreadsheet.getSheetByName(name);
     const title = ["", "Ticker", "Price", "Unit cost", "", "Total Cost", "Sum of Share", "Sum of Realized", "Market Value", "Un-realized ($)", "Un-realized (%)", "Cumulative cost", "Spent cost", "Realized gain (%)"];
 
     if (sht) {
@@ -169,7 +170,7 @@ function create_summary_sheet(name) {
         sht.getRange("C2:J").setNumberFormat("#,##0.00");
         sht.appendRow(title);
     }
-    GainLoss2026_Summary_sht = sht;
+    return sht;
 }
 
 function create_ticker_sheet(name) {
@@ -187,8 +188,8 @@ function create_ticker_sheet(name) {
 }
 
 function collect_ticker_entries(ticker, ticker_in_eq) {
-    var rowNumber = GainLoss2026_sht.getMaxRows();
-    var range = GainLoss2026_sht.getRange("A1:M" + rowNumber);
+    var rowNumber = GainLoss_Log_Sht.getMaxRows();
+    var range = GainLoss_Log_Sht.getRange("A1:M" + rowNumber);
     SpreadsheetApp.getActive().setNamedRange("Symbol", range);
     var values = range.getValues();
 
@@ -312,7 +313,7 @@ function create_ticker_data(ticker, ticker_eq, sht_id) {
     for (var i = 0; i < entries.length; ++i) {
         TickerSheets[sht_id].appendRow(entries[i]);
     }
-    GainLoss2026_Summary_sht.appendRow(entries[entries.length - 1]);
+    STOCK_GainLoss_Sht.appendRow(entries[entries.length - 1]);
 }
 
 function message_box(title, msg) {
@@ -346,8 +347,8 @@ function create_option_sheet(name, side) {
 }
 
 function collect_option_entries(ticker, side) {
-    var rowNumber = GainLoss2026_sht.getMaxRows();
-    var range = GainLoss2026_sht.getRange("A1:M" + rowNumber);
+    var rowNumber = GainLoss_Log_Sht.getMaxRows();
+    var range = GainLoss_Log_Sht.getRange("A1:M" + rowNumber);
     SpreadsheetApp.getActive().setNamedRange("Symbol", range);
     var values = range.getValues();
 
@@ -389,5 +390,5 @@ function create_option_data(ticker, side, sht_id) {
     for (var i = 0; i < entries.length; ++i) {
         OptionSheets[sht_id].appendRow(entries[i]);
     }
-    GainLoss2026_Summary_sht.appendRow(entries[entries.length - 1]);
+    OPTION_GainLoss_Sht.appendRow(entries[entries.length - 1]);
 }
